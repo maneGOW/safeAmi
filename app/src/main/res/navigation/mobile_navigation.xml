@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/splashscreenFragment">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.manegow.safeami.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_nav_map"
+            app:destination="@+id/nav_map" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_map"
+        android:name="com.manegow.safeami.ui.gallery.GalleryFragment"
+        android:label="@string/menu_map"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.manegow.safeami.ui.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/nav_login"
+        android:name="com.manegow.safeami.ui.login.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_nav_login_to_nav_home"
+            app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_nav_login_to_recoverPasswordFragment"
+            app:destination="@id/recoverPasswordFragment" />
+        <action
+            android:id="@+id/action_nav_login_to_nav_singup"
+            app:destination="@id/nav_singup" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_singup"
+        android:name="com.manegow.safeami.ui.singup.SingupFragment"
+        android:label="Singup"
+        tools:layout="@layout/fragment_share" />
+
+    <fragment
+        android:id="@+id/nav_send"
+        android:name="com.manegow.safeami.ui.send.SendFragment"
+        android:label="@string/menu_send"
+        tools:layout="@layout/fragment_send" />
+    <fragment
+        android:id="@+id/splashscreenFragment"
+        android:name="com.manegow.safeami.ui.splashscreen.SplashscreenFragment"
+        android:label="splashscreen_fragment"
+        tools:layout="@layout/splashscreen_fragment" >
+        <action
+            android:id="@+id/action_splashscreenFragment_to_nav_home"
+            app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_splashscreenFragment_to_nav_login"
+            app:destination="@id/nav_login" />
+    </fragment>
+    <fragment
+        android:id="@+id/recoverPasswordFragment"
+        android:name="com.manegow.safeami.RecoverPasswordFragment"
+        android:label="Recover Password"
+        tools:layout="@layout/fragment_recoverpassword" />
+</navigation>
