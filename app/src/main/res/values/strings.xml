@@ -7,6 +7,18 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <string name="facebook_app_id">191380695428725</string>
+    <string name="fb_login_protocol_scheme">fb191380695428725</string>
+
+    <string name="internet_not_working">Uh..oh… We\'re unable proceed, its seems like your internet connection is broke or maybe limited. Please check it and try again.</string>
+    <string name="cancel">Cancel</string>
+    <string name="try_again">Try Again</string>
+    <string name="limited_internet_connection">Limited Internet Connection</string>
+    <string name="auth_user_collision_message">It seems like %1$s is already linked with the following login providers. Please select any of following provider in order to login with your previous information.</string>
+    <string name="user_collision">User Collision</string>
+    <string name="operation_cancelled">Operation Cancelled</string>
+    <string name="operation_cancelled_content">It seems like you cancel the on-going operation. You can restart the process by simply clicking Try Again.</string>
+
     <string name="menu_home">Home</string>
     <string name="menu_map">Map</string>
     <string name="menu_profile">Profile</string>

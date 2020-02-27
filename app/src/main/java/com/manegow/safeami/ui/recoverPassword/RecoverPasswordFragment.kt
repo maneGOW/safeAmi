@@ -1,4 +1,4 @@
-package com.manegow.safeami
+package com.manegow.safeami.ui.recoverPassword
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -6,12 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.manegow.safeami.R
 
 
 class RecoverPasswordFragment : Fragment() {
 
     companion object {
-        fun newInstance() = RecoverPasswordFragment()
+        fun newInstance() =
+            RecoverPasswordFragment()
     }
 
     private lateinit var viewModel: RecoverPasswordViewModel

@@ -1,4 +1,4 @@
-package com.manegow.safeami
+package com.manegow.safeami.ui.recoverPassword
 
 import androidx.lifecycle.ViewModel
 

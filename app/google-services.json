@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "352173471616",
+    "firebase_url": "https://safeami.firebaseio.com",
+    "project_id": "safeami",
+    "storage_bucket": "safeami.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352173471616:android:3c94c056b927cdc00f3365",
+        "android_client_info": {
+          "package_name": "com.manegow.safeami"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "352173471616-gp4r4ec6q2tg1cbulac0tn9uo8434eqp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdsaWbXuhBTzU77JyzTZnH1eNIhgr2asY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "352173471616-gp4r4ec6q2tg1cbulac0tn9uo8434eqp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
