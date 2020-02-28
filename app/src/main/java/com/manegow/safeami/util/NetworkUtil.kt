@@ -2,7 +2,7 @@ package com.manegow.safeami.util
 
 import com.manegow.safeami.data.Result
 
-suspend fun <T : Any> safeApiCall(call: suspend () -> Result<T>): Result<T> {
+suspend fun <T : Any> safeApiCall(call: suspend() -> Result<T>): Result<T>{
     return try {
         call()
     } catch (e: Exception) {

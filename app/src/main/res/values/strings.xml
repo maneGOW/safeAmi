@@ -18,6 +18,7 @@
     <string name="user_collision">User Collision</string>
     <string name="operation_cancelled">Operation Cancelled</string>
     <string name="operation_cancelled_content">It seems like you cancel the on-going operation. You can restart the process by simply clicking Try Again.</string>
+    <string name ="select">Select Text</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_map">Map</string>

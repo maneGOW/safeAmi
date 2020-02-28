@@ -45,9 +45,9 @@
 
     <fragment
         android:id="@+id/nav_singup"
-        android:name="com.manegow.safeami.ui.singup.SingupFragment"
+        android:name="com.manegow.safeami.ui.signup.SignupFragment"
         android:label="Singup"
-        tools:layout="@layout/fragment_share" />
+        tools:layout="@layout/fragment_signup" />
 
     <fragment
         android:id="@+id/nav_send"
