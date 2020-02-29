@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.manegow.safeami.R
+import com.manegow.safeami.database.SafeAmiDatabase
 import com.manegow.safeami.databinding.FragmentSignupBinding
 
 class SignupFragment : Fragment() {
@@ -24,6 +26,14 @@ class SignupFragment : Fragment() {
         val application = requireNotNull(this.activity).application
         val databaseInstance = FirebaseDatabase.getInstance()
         val authentication = FirebaseAuth.getInstance()
-        val viewModelFactory = SignUpViewModelFactory(databaseInstance, authentication, application)
+        val dataSource = SafeAmiDatabase.getInstance(application).safeAmiDatabaseDao()
+        val viewModelFactory = SignupViewModelFactory(databaseInstance, dataSource, authentication, this, application)
+        shareViewModel = ViewModelProviders.of(this,viewModelFactory)
+            .get(SignupViewModel::class.java)
+
+        bindingSignUp.btnRegister.setOnClickListener {
+            shareViewModel.registerUser(bindingSignUp.usernameInputEditText.text.toString(), bindingSignUp.emailInputEditText.text.toString(), bindingSignUp.passwordInputEditText.text.toString())
+        }
+        return bindingSignUp.root
     }
 }

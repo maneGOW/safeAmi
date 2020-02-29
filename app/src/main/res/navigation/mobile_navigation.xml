@@ -58,7 +58,7 @@
         android:id="@+id/splashscreenFragment"
         android:name="com.manegow.safeami.ui.splashscreen.SplashscreenFragment"
         android:label="splashscreen_fragment"
-        tools:layout="@layout/splashscreen_fragment" >
+        tools:layout="@layout/fragment_splashscreen" >
         <action
             android:id="@+id/action_splashscreenFragment_to_nav_home"
             app:destination="@id/nav_home" />

@@ -42,15 +42,19 @@ class LoginFragment : Fragment() {
     ): View? {
         val bindingLogin : FragmentLoginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
 
+        bindingLogin.setLifecycleOwner(this)
+
         val application = requireNotNull(this.activity).application
         auth = FirebaseAuth.getInstance()
 
-        val viewModelFactory = LoginViewModelFactory(auth, application)
+        val viewModelFactory = LoginViewModelFactory(auth, this, application)
 
         callbackManager = CallbackManager.Factory.create()
 
         loginViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(LoginViewModel::class.java)
+
+        bindingLogin.loginViewModel = loginViewModel
 
         bindingLogin.btnRecoverPassword.setOnClickListener { v: View ->
             v.findNavController().navigate(LoginFragmentDirections.actionNavLoginToRecoverPasswordFragment())
@@ -58,6 +62,7 @@ class LoginFragment : Fragment() {
         bindingLogin.btnSignUp.setOnClickListener { v: View ->
             v.findNavController().navigate(LoginFragmentDirections.actionNavLoginToNavSingup())
         }
+
         loginViewModel.navigateToUserRegistration.observe(viewLifecycleOwner, Observer {
             navigate ->
             if(navigate){
@@ -68,22 +73,21 @@ class LoginFragment : Fragment() {
             }
         })
 
-        bindingLogin.btnLogin.setOnClickListener { v: View ->
-            //v.findNavController().navigate(LoginFragmentDirections.actionNavLoginToNavHome())
-            loginViewModel.loginWithEmail(bindingLogin.usernameInputEditText.text.toString(), bindingLogin.passwordInputEditText.text.toString())
-
-            /*
-                    sleepTrackerViewModel.navigateToSleepDataQuality.observe(this, Observer { night ->
-            night?.let {
-
+        loginViewModel.navigateToMainScreen.observe(viewLifecycleOwner, Observer {
+            navigate ->
+            if(navigate){
                 this.findNavController().navigate(
-                        SleepTrackerFragmentDirections
-                                .actionSleepTrackerFragmentToSleepDetailFragment(night))
-                sleepTrackerViewModel.onSleepDataQualityNavigated()
+                    LoginFragmentDirections
+                        .actionNavLoginToNavHome())
+                loginViewModel.onMainScreenNavigated()
             }
         })
-             */
+
+        bindingLogin.btnLogin.setOnClickListener {
+            loginViewModel.loginWithEmail(bindingLogin.usernameInputEditText.text.toString(), bindingLogin.passwordInputEditText.text.toString())
+            loginViewModel.onMainScreenNavigated()
         }
+
         bindingLogin.btnFacebookLogin.setPermissions("email", "public_profile")
 
         bindingLogin.btnFacebookLogin.registerCallback(callbackManager, object : FacebookCallback<LoginResult>{
@@ -91,11 +95,9 @@ class LoginFragment : Fragment() {
                 println("SUCCESS")
                 loginViewModel.handleFacebookAccessToken(result!!.accessToken, application.applicationContext)
             }
-
             override fun onCancel() {
                 println("CANCEL")
             }
-
             override fun onError(error: FacebookException?) {
                 println("ERROR")
             }
@@ -109,8 +111,6 @@ class LoginFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         auth.signOut()
-        /*val currentUser = auth.currentUser
-        Toast.makeText(this.context,"user $currentUser has logged in", Toast.LENGTH_LONG).show()*/
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
