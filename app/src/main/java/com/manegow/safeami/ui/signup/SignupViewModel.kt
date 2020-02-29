@@ -28,8 +28,6 @@ class SignupViewModel(
     application: Application
 ) : BaseViewModel(fragment, application) {
 
-    private var viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private var databaseReference = databaseInstance.reference.child("Users")
 
     private fun createNewAccount(username: String, email: String, password: String) {
@@ -53,13 +51,17 @@ class SignupViewModel(
         password: String
     ) {
         createUserInFirebaseDB(user, username, email, password)
-        createUserInRoom(username, email, password)
+        createUserInRoom(databaseRoom,username, email, password)
     }
 
-    private suspend fun createUserInRoom(user: User) {
-        withContext(Dispatchers.IO) {
-            databaseRoom.insertUser(user)
-        }
+    fun registerUser(username: String, email: String, password: String) {
+        if (!username.isNullOrBlank()) {
+            if (!email.isNullOrBlank()) {
+                if (!password.isNullOrBlank()) {
+                    createNewAccount(username, email, password)
+                } else generateToast("Tienes que escribir un password.")
+            } else generateToast("Tienes que escribir tu email.")
+        } else generateToast("Tienes que escribir un username.")
     }
 
     private fun createUserInFirebaseDB(
@@ -78,14 +80,6 @@ class SignupViewModel(
         currentUserDb.child("deviceModel").setValue(Build.MODEL)
         currentUserDb.child("isActive").setValue(true)
         println("usuario $username creado en firebase")
-    }
-
-    private fun createUserInRoom(username: String, email: String, password: String) {
-        uiScope.launch {
-            val user = User(0, username, email, password, System.currentTimeMillis(), 0)
-            createUserInRoom(user)
-            println("usuario $username creado en room")
-        }
     }
 
     private fun createUserInSafeAmiApi(username: String, email: String, password: String) {
@@ -136,13 +130,8 @@ class SignupViewModel(
             }
     }
 
-    fun registerUser(username: String, email: String, password: String) {
-        if (!username.isNullOrBlank()) {
-            if (!email.isNullOrBlank()) {
-                if (!password.isNullOrBlank()) {
-                    createNewAccount(username, email, password)
-                } else generateToast("Tienes que escribir un password.")
-            } else generateToast("Tienes que escribir tu email.")
-        } else generateToast("Tienes que escribir un username.")
+    override fun onCleared() {
+        super.onCleared()
+        uiScope.cancel()
     }
 }

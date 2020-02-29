@@ -18,47 +18,57 @@ import com.manegow.safeami.databinding.FragmentSplashscreenBinding
 
 class SplashscreenFragment : Fragment() {
 
+    private lateinit var splashscreenViewModel: SplashscreenViewModel
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentSplashscreenBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_splashscreen, container, false)
+        val bindingSplashScreen: FragmentSplashscreenBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_splashscreen, container, false)
+
+        bindingSplashScreen.setLifecycleOwner(this)
 
         val application = requireNotNull(this.activity).application
         val dataSource = SafeAmiDatabase.getInstance(application).safeAmiDatabaseDao()
 
         val viewModelFactory = SplashscreenViewModelFactory(dataSource, application)
-        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(SplashscreenViewModel::class.java)
+        splashscreenViewModel =
+            ViewModelProviders.of(this, viewModelFactory)
+                .get(SplashscreenViewModel::class.java)
 
-        binding.setLifecycleOwner(this)
+        bindingSplashScreen.splashScreenViewModel = splashscreenViewModel
 
-        viewModel.getLocalUser()
-
-        viewModel.navigateToMainScreen.observe(viewLifecycleOwner, Observer {
-            println("Current Destination ${this.findNavController().currentDestination}")
-            this.findNavController().navigate(
-                SplashscreenFragmentDirections
-                    .actionSplashscreenFragmentToNavHome()
-            )
-            viewModel.onMainScreenNavigated()
+        splashscreenViewModel.navigateToMainScreen.observe(viewLifecycleOwner, Observer { navigate ->
+            if (navigate) {
+                println("Current Destination ${this.findNavController().currentDestination}")
+                this.findNavController().navigate(
+                    SplashscreenFragmentDirections
+                        .actionSplashscreenFragmentToNavHome())
+                splashscreenViewModel.onMainScreenNavigated()
+            }
         })
-        viewModel.navigateToLogin.observe(viewLifecycleOwner, Observer {
-            this.findNavController().navigate(
-                SplashscreenFragmentDirections
-                    .actionSplashscreenFragmentToNavLogin()
-            )
-            viewModel.onLoginNavigated()
+
+        splashscreenViewModel.navigateToLogin.observe(viewLifecycleOwner, Observer { navigate ->
+            if (navigate) {
+                this.findNavController().navigate(
+                    SplashscreenFragmentDirections
+                        .actionSplashscreenFragmentToNavLogin())
+                splashscreenViewModel.onLoginNavigated()
+            }
         })
 
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
 
-        return binding.root
+        return bindingSplashScreen.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Handler().postDelayed({
             context?.let {
+                splashscreenViewModel.getLocalUser()
             }
         }, 2500)
     }

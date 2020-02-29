@@ -19,17 +19,15 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.manegow.safeami.R
 import com.manegow.safeami.data.AuthType
+import com.manegow.safeami.database.SafeAmiDatabase
 import com.manegow.safeami.databinding.FragmentLoginBinding
 import com.manegow.safeami.helper.CustomMaterialDialog.showSimpleDialog
 import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment : Fragment() {
-
-    private companion object{
-        private  val facebook_permissions = mutableListOf("email", "public_profile")
-    }
 
     private lateinit var callbackManager: CallbackManager
     private lateinit var loginViewModel: LoginViewModel
@@ -40,14 +38,20 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val bindingLogin : FragmentLoginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+        val bindingLogin : FragmentLoginBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
 
         bindingLogin.setLifecycleOwner(this)
 
+        val databaseInstance = FirebaseDatabase.getInstance()
+
         val application = requireNotNull(this.activity).application
+
         auth = FirebaseAuth.getInstance()
 
-        val viewModelFactory = LoginViewModelFactory(auth, this, application)
+        val dataSource = SafeAmiDatabase.getInstance(application).safeAmiDatabaseDao()
+
+        val viewModelFactory = LoginViewModelFactory(auth, dataSource, databaseInstance, this, application)
 
         callbackManager = CallbackManager.Factory.create()
 

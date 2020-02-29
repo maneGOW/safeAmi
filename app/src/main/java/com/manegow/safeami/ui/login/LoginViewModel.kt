@@ -10,10 +10,24 @@ import com.facebook.*
 import com.firebase.ui.auth.AuthUI
 
 import com.google.firebase.auth.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.manegow.safeami.BaseViewModel
+import com.manegow.safeami.database.SafeAmiDatabaseDao
+import com.manegow.safeami.database.User
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class LoginViewModel(private val firebaseAuth: FirebaseAuth, fragment: Fragment, application: Application) :
+class LoginViewModel(
+    private val firebaseAuth: FirebaseAuth,
+    private val datasource: SafeAmiDatabaseDao,
+    private val databaseInstance: FirebaseDatabase,
+    fragment: Fragment,
+    application: Application
+) :
     BaseViewModel(fragment, application) {
 
     private val _navigateToUserRegistration = MutableLiveData<Boolean>()
@@ -24,19 +38,58 @@ class LoginViewModel(private val firebaseAuth: FirebaseAuth, fragment: Fragment,
     val navigateToMainScreen: LiveData<Boolean>
         get() = _navigateToMainScreen
 
-    private fun loginUser(username: String, password: String) {
+    private fun loginUser(email: String, password: String) {
         _navigateToUserRegistration.value = false
         _navigateToMainScreen.value = false
-        firebaseAuth.signInWithEmailAndPassword(username, password)
+        firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _navigateToMainScreen.value = true
+                    getLocalUser()
+                    onMainScreenNavigated()
                     println("Successful login with email")
                 } else {
-                    generateWarningAlert("No estas registrado", "¿Deseas crear una nueva cuenta?", "Ok")
+                    generateWarningAlert(
+                        "No estas registrado",
+                        "¿Deseas crear una nueva cuenta?",
+                        "Ok"
+                    )
                     _navigateToUserRegistration.value = true
                 }
             }
+    }
+
+    private fun getLocalUser() {
+        uiScope.launch {
+            _navigateToMainScreen.value = false
+            _navigateToUserRegistration.value = false
+            val user = suspendGetCurrentUser(datasource)
+            if (user != null) {
+                _navigateToMainScreen.value = true
+            } else {
+                initUserFromFirebase()
+                _navigateToMainScreen.value = true
+            }
+        }
+    }
+
+    private fun initUserFromFirebase() {
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val rootRef = FirebaseDatabase.getInstance().reference
+        val uidRef = rootRef.child("Users").child(uid)
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                val user = p0.getValue(com.manegow.safeami.data.firebase.User::class.java)
+                println("usuario: ${user!!.username}")
+                println("usuario: ${user.email}")
+                println("usuario: ${user.password}")
+                createUserInRoom(datasource, user.username, user.email, user.password)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                println("Error al obtener datos de Firebase $p0")
+            }
+        }
+        uidRef.addListenerForSingleValueEvent(valueEventListener)
     }
 
     fun onSignUpNavigated() {
@@ -102,6 +155,11 @@ class LoginViewModel(private val firebaseAuth: FirebaseAuth, fragment: Fragment,
         } else {
             println("NONE")
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        uiScope.cancel()
     }
 }
 
