@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -19,6 +21,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.manegow.safeami.R
+import com.manegow.safeami.database.SafeAmiDatabase
+import com.manegow.safeami.databinding.FragmentMapBinding
 
 class MapFragment : Fragment(), OnMapReadyCallback, PermissionListener {
 
@@ -31,12 +35,20 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mapViewModel =
-            ViewModelProviders.of(this).get(MapViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_map, container, false)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-        return root
+        val bindingMap: FragmentMapBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_map, container, false)
+        val application = requireNotNull(this.activity).application
+        val dataSource = SafeAmiDatabase.getInstance(application).safeAmiDatabaseDao()
+        val viewModelFactory = MapViewModelFactory(dataSource, application)
+        val mapViewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(MapViewModel::class.java)
+
+        bindingMap.lifecycleOwner = this
+        val manager = GridLayoutManager(activity, 1)
+        bindingMap.recyclerView3!!.layoutManager = manager
+
+
+        return bindingMap.root
     }
 
     override fun onMapReady(map: GoogleMap?) {
@@ -45,7 +57,11 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionListener {
             googleMap.isMyLocationEnabled = true
             googleMap.uiSettings.isMyLocationButtonEnabled = true
             googleMap.uiSettings.isZoomControlsEnabled = true
-            mapViewModel.getCurrentLocation(fusedLocationProviderClient, this.requireActivity(), googleMap)
+            mapViewModel.getCurrentLocation(
+                fusedLocationProviderClient,
+                this.requireActivity(),
+                googleMap
+            )
         }
     }
 
@@ -53,7 +69,11 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionListener {
         when (requestCode) {
             REQUEST_CHECK_SETTINGS -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    mapViewModel.getCurrentLocation(fusedLocationProviderClient, this.requireActivity(), googleMap)
+                    mapViewModel.getCurrentLocation(
+                        fusedLocationProviderClient,
+                        this.requireActivity(),
+                        googleMap
+                    )
                 }
             }
         }
@@ -70,7 +90,11 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionListener {
     }
 
     override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-        mapViewModel.getCurrentLocation(fusedLocationProviderClient, this.requireActivity(), googleMap)
+        mapViewModel.getCurrentLocation(
+            fusedLocationProviderClient,
+            this.requireActivity(),
+            googleMap
+        )
     }
 
     override fun onPermissionRationaleShouldBeShown(

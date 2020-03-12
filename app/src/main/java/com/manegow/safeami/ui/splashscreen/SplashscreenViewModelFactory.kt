@@ -10,6 +10,6 @@ class SplashscreenViewModelFactory (private val databaseRoom: SafeAmiDatabaseDao
         if(modelClass.isAssignableFrom(SplashscreenViewModel::class.java)){
             return SplashscreenViewModel(databaseRoom, application) as T
         }
-        throw IllegalArgumentException("Unknown Viewmodel class")
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

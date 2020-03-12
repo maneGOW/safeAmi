@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
-    entities = [User::class, Device::class, Location::class],
+    entities = [User::class, Device::class, Location::class, Friends::class],
     version = 1,
     exportSchema = false
 )
@@ -33,7 +33,7 @@ abstract class SafeAmiDatabase : RoomDatabase() {
                         .build()
                     INSTANCE = instance
                 }
-                return instance!!
+                return instance
             }
 
         }

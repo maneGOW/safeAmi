@@ -1,6 +1,7 @@
 package com.manegow.safeami.ui.profile
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,12 +39,12 @@ class ProfileFragment : Fragment() {
 
         profileViewModel.usernameLiveData.observe(viewLifecycleOwner, Observer {
             username ->
-            bindingProfile.txtUsername.text = username
+            bindingProfile.txtUsername.text = Editable.Factory.getInstance().newEditable(username)
         })
 
         profileViewModel.emailLivedata.observe(viewLifecycleOwner, Observer{
             email ->
-            bindingProfile.txtEmail.text = email
+            bindingProfile.txtEmail.text = Editable.Factory.getInstance().newEditable(email)
         })
 
         return bindingProfile.root

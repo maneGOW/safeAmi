@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.manegow.safeami.R
 import com.manegow.safeami.databinding.FragmentHomeBinding
 
@@ -23,22 +24,48 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val bindingHome : FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        bindingHome.button.setOnClickListener {v: View ->
-            v.findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavMap())
-        }
+        val application = requireNotNull(this.activity).application
+        val viewModelFactory = HomeViewModelFactory(this, application)
+        val homeViewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(HomeViewModel::class.java)
+
+        bindingHome.lifecycleOwner = this
+
+        bindingHome.viewModel = homeViewModel
+
+        homeViewModel.navigateToConfigurationFragment.observe(viewLifecycleOwner, Observer {
+            if(it){
+                this.findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavProfile())
+                homeViewModel.doneNavigation()
+            }
+        })
+
+        homeViewModel.navigateToDevicesFragment.observe(viewLifecycleOwner, Observer {
+            if(it){
+                this.findNavController().navigate(HomeFragmentDirections.actionNavHomeToFragmentDevices())
+                homeViewModel.doneNavigation()
+            }
+        })
+
+        homeViewModel.navigateToFriendsFragment.observe(viewLifecycleOwner, Observer {
+            if(it){
+                this.findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavFriends())
+                homeViewModel.doneNavigation()
+            }
+        })
+
+        homeViewModel.navigateToMapFragment.observe(viewLifecycleOwner, Observer {
+            if(it){
+                this.findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavMap())
+                homeViewModel.doneNavigation()
+            }
+
+        })
+
+        homeViewModel.getSOS.observe(viewLifecycleOwner, Observer {
+
+        })
+
         return bindingHome.root
     }
 }
-
-/*
-binding.btnAgree.setOnClickListener {v: View ->
-
-            Log.e("Telephone Data", binding.tietPhoneNumber!!.text.toString())
-            Log.e("Password Data", binding.tietPassword!!.text.toString())
-
-
-                    v.findNavController().navigate(UserDataRegisterFragmentDirections.actionUserDataRegisterFragmentToSmsCodeRegisterFragment(binding.tietPhoneNumber.text.toString(),binding.tietPassword.text.toString()))
-
-                userDataRegisterViewModel.buildAlert (context!!,"Error","Debes ingresar el número de télefono","ok")
-            }
- */

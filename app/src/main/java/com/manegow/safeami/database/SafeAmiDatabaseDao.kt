@@ -38,6 +38,26 @@ interface SafeAmiDatabaseDao {
     @Query("DELETE FROM devices_table")
     fun deleteAllDevices()
 
+    //------------------------- Friends ----------------------
+
+    @Insert
+    fun insertNewFriend(friend: Friends)
+
+    @Update
+    fun updateFriend(friend: Friends)
+
+    @Query("SELECT * FROM friends_table WHERE friendId = :friendKey")
+    fun getFriend(friendKey: Long): Friends
+
+    @Query("SELECT * FROM friends_table")
+    fun getAllFriends(): LiveData<List<Friends>>
+
+    @Delete
+    fun deleteFriend(friend: Friends)
+
+    @Query("DELETE FROM friends_table")
+    fun deleteAllFriends()
+
     //------------------------- Locations ----------------------
 
     @Insert

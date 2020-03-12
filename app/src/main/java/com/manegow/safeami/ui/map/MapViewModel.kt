@@ -22,11 +22,12 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.manegow.safeami.R
+import com.manegow.safeami.database.SafeAmiDatabaseDao
 import java.io.IOException
 import java.lang.ClassCastException
 import java.util.*
 
-class MapViewModel(application: Application) : AndroidViewModel(application) {
+class MapViewModel(val dataBase: SafeAmiDatabaseDao, application: Application) : AndroidViewModel(application) {
 
     private fun getFriendsLocations(){
         //TODO firends mobile's locations

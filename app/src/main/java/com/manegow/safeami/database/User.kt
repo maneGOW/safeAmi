@@ -18,9 +18,9 @@ data class User(
     @ColumnInfo(name = "password")
     var password: String,
 
-    @ColumnInfo(name = " registrationDate")
+    @ColumnInfo(name = "registrationDate")
     var registrationDate: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = "lastLogin")
-    var lastLogig: Long = 0L
+    var lastLogin: Long = 0L
 )

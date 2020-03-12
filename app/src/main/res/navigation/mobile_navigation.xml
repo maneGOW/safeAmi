@@ -13,13 +13,26 @@
         <action
             android:id="@+id/action_nav_home_to_nav_map"
             app:destination="@+id/nav_map" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_profile"
+            app:destination="@id/nav_profile" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_friends"
+            app:destination="@id/nav_friends" />
+        <action
+            android:id="@+id/action_nav_home_to_fragmentDevices"
+            app:destination="@id/fragmentDevices" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_map"
         android:name="com.manegow.safeami.ui.map.MapFragment"
         android:label="@string/menu_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_nav_map_to_friendDetails"
+            app:destination="@id/friendDetails" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_profile"
@@ -50,10 +63,17 @@
         tools:layout="@layout/fragment_signup" />
 
     <fragment
-        android:id="@+id/nav_send"
+        android:id="@+id/nav_friends"
         android:name="com.manegow.safeami.ui.send.SendFragment"
         android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
+        tools:layout="@layout/fragment_friends" >
+        <action
+            android:id="@+id/action_nav_friends_to_friendRequestFragment"
+            app:destination="@id/friendRequestFragment" />
+        <action
+            android:id="@+id/action_nav_friends_to_friendDetails"
+            app:destination="@id/friendDetails" />
+    </fragment>
     <fragment
         android:id="@+id/splashscreenFragment"
         android:name="com.manegow.safeami.ui.splashscreen.SplashscreenFragment"
@@ -71,4 +91,36 @@
         android:name="com.manegow.safeami.ui.recoverPassword.RecoverPasswordFragment"
         android:label="Recover Password"
         tools:layout="@layout/fragment_recoverpassword" />
+    <fragment
+        android:id="@+id/fragmentAddDevice"
+        android:name="com.manegow.safeami.ui.adddevice.FragmentAddDevice"
+        android:label="fragment_add_device"
+        tools:layout="@layout/fragment_add_device" />
+    <fragment
+        android:id="@+id/fragmentDeviceDetail"
+        android:name="com.manegow.safeami.ui.devicedetail.FragmentDeviceDetail"
+        android:label="fragment_device_detail"
+        tools:layout="@layout/fragment_device_detail" />
+    <fragment
+        android:id="@+id/fragmentDevices"
+        android:name="com.manegow.safeami.ui.devices.FragmentDevices"
+        android:label="fragment_devices"
+        tools:layout="@layout/fragment_devices" >
+        <action
+            android:id="@+id/action_fragmentDevices_to_fragmentAddDevice"
+            app:destination="@id/fragmentAddDevice" />
+        <action
+            android:id="@+id/action_fragmentDevices_to_fragmentDeviceDetail"
+            app:destination="@id/fragmentDeviceDetail" />
+    </fragment>
+    <fragment
+        android:id="@+id/friendRequestFragment"
+        android:name="com.manegow.safeami.ui.friendrequest.FriendRequestFragment"
+        android:label="fragment_friend_request"
+        tools:layout="@layout/fragment_friend_request" />
+    <fragment
+        android:id="@+id/friendDetails"
+        android:name="com.manegow.safeami.ui.frienddetails.FriendDetails"
+        android:label="fragment_friend_details"
+        tools:layout="@layout/fragment_friend_details" />
 </navigation>

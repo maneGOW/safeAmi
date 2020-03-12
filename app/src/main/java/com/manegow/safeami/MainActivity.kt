@@ -11,7 +11,6 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
-import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_map, R.id.nav_profile,
-                R.id.nav_login, R.id.nav_singup, R.id.nav_send
+                R.id.nav_login, R.id.nav_singup, R.id.nav_friends
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
